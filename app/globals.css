@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-lg: 820px;
+}
+
+@font-face {
+  font-family: 'CMU';
+  src: url('../public/cmunrm.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: #e3eef5;
+}
+
+/* Headers */
+.h1 { font-size: 15px; font-weight: 600; padding-top: 10px; }
+.h2 { font-size: 13.9px; font-weight: 600; padding-top: 10px; }
+.h3 { font-size: 12.8px; padding-top: 10px; }
+.h4 { font-size: 11.9px; padding-top: 10px; }
+.h5, .h6 {
+  font-variant: small-caps;
+  transform: scaleX(0.95);
+  transform-origin: left;
+  padding-top: 7px;
+}
+.h5 { font-size: 11.8px; }
+.h6 { font-size: 12.4px; }
+
+.no-padding-top { padding-top: 0 !important; }
+
+/* Italic/em tags */
+em { font-style: italic; }
+strong em { font-style: italic; font-weight: 600; }
+strong { font-weight: 600; }
