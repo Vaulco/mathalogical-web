@@ -1,4 +1,4 @@
-Danyil Niemtsov
+Danyil
 
 This is a *work in progress*
 
