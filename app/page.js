@@ -4,7 +4,7 @@ import path from "path";
 import Notes from "./components/note";
 
 export default function HomePage() {
-  const filePath = path.join(process.cwd(), "public", "Danyil Niemtsov.md");
+  const filePath = path.join(process.cwd(), "public", "Danyil.md");
   
   let content = "Welcome to Mathalogical!";
   try {
@@ -13,5 +13,5 @@ export default function HomePage() {
     console.error("Homepage file not found:", filePath, err);
   }
 
-  return <Notes content={content} filename="Danyil Niemtsov.md" />;
+  return <Notes content={content} filename="Danyil.md" />;
 }

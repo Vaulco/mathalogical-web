@@ -76,7 +76,7 @@ export default function Nav1({ items }) {
             style={{ paddingLeft: `${paddingLeft}px`, paddingRight: '8px' }}
             onClick={() => toggleFolder(fullPath)}
           >
-            <span className="mr-2 flex items-center flex-shrink-0 ml-[2px]">
+            <span className="mr-2 flex items-center shrink-0 ml-0.5">
               <FolderIcon isExpanded={isExpanded} isClient={isClient} />
             </span>
             <span className="font-medium truncate" title={item.name}>
