@@ -43,7 +43,7 @@ export default function Nav1({ items }) {
     return '/' + fullPath
       .replace(/\.md$/, '')
       .split('/')
-      .map(segment => segment.replace(/\s+/g, "-").toLowerCase())
+      .map(segment => segment.normalize("NFC").trim().replace(/\s+/g, "-").toLowerCase())
       .join('/');
   }, []);
 

@@ -62,7 +62,7 @@ function readDirectoryStructure(dirPath, relativePath = "") {
           name: nameWithoutExt,
           type: 'file',
           path: relativeItemPath,
-          slug: nameWithoutExt.replace(/\s+/g, "-").toLowerCase(),
+          slug: nameWithoutExt.normalize("NFC").trim().replace(/\s+/g, "-").toLowerCase(),
           filename: entry.name
         });
       }

@@ -3,6 +3,20 @@ import path from "path";
 import { redirect } from "next/navigation";
 import Notes from "../components/note";
 
+// Normalize Unicode (NFC) before slugifying so filenames written on
+// different OSes/tools (Windows, macOS, git, browsers) always compare
+// equal even if the underlying byte sequences differ. Also decode any
+// percent-encoding defensively in case a segment arrives still encoded.
+function slugify(segment) {
+  let s = segment;
+  try {
+    s = decodeURIComponent(s);
+  } catch {
+    // already decoded / not percent-encoded — ignore
+  }
+  return s.normalize("NFC").trim().replace(/\s+/g, "-").toLowerCase();
+}
+
 function hasMarkdownFiles(dirPath) {
   try {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -51,7 +65,7 @@ function getAllFilesInDirectory(dirPath, relativePath = "") {
           urlSegments: relativeItemPath
             .replace(/\.md$/, '')
             .split(path.sep)
-            .map(segment => segment.replace(/\s+/g, "-").toLowerCase())
+            .map(slugify)
         });
       }
     }
@@ -64,25 +78,20 @@ function getAllFilesInDirectory(dirPath, relativePath = "") {
 
 function findBestFileMatch(notesPath, slugArray) {
   const allFiles = getAllFilesInDirectory(notesPath);
-  const slugArrayLower = slugArray.map(s => s.toLowerCase());
-  const slugStringified = JSON.stringify(slugArrayLower);
-  
+  const normalizedSlug = slugArray.map(slugify);
+  const slugStringified = JSON.stringify(normalizedSlug);
+  const lastSlugSegment = normalizedSlug[normalizedSlug.length - 1];
+
   return allFiles.find(file =>
-    // Exact URL segment match
+    // Exact URL segment match (path + filename)
     JSON.stringify(file.urlSegments) === slugStringified ||
     // Single file in root
-    (slugArray.length === 1 &&
+    (normalizedSlug.length === 1 &&
       file.urlSegments.length === 1 &&
-      file.nameWithoutExt.replace(/\s+/g, "-").toLowerCase() === slugArrayLower[0]) ||
-    // File path segments match
-    JSON.stringify(file.relativePath
-      .replace(/\.md$/, '')
-      .split(path.sep)
-      .map(segment => segment.replace(/\s+/g, "-").toLowerCase())
-    ) === slugStringified ||
-    // Filename match for nested files
-    (slugArray.length > 1 &&
-      file.nameWithoutExt.replace(/\s+/g, "-").toLowerCase() === slugArrayLower[slugArrayLower.length - 1])
+      file.urlSegments[0] === normalizedSlug[0]) ||
+    // Filename-only match for nested files (last segment matches)
+    (normalizedSlug.length > 1 &&
+      slugify(file.nameWithoutExt) === lastSlugSegment)
   ) || null;
 }
 
